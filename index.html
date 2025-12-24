@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Para mi Novia</title>
+    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Merriweather:ital,wght@0,300;0,700;1,300&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #021a10; /* Verde oscuro */
+            --card-width: 380px;
+            --card-height: 550px;
+            --paper-color: #fffaf0; /* Blanco crema más cálido */
+            --text-color: #2c3e50;
+            --red-festive: #c0392b;
+            --red-cover: #a91b1b;
+            --gold: #d4af37;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: var(--bg-color);
+            font-family: 'Merriweather', serif;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* --- NIEVE ANIMADA --- */
+        .snow-container {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none; z-index: 0;
+        }
+        .snow {
+            position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+            background-image: radial-gradient(4px 4px at 100px 50px, #fff, transparent),
+                              radial-gradient(6px 6px at 200px 150px, #fff, transparent),
+                              radial-gradient(3px 3px at 300px 250px, #fff, transparent);
+            background-size: 550px 550px;
+            animation: snowfall linear infinite;
+        }
+        .snow.layer1 { opacity: 0.6; animation-duration: 10s; }
+        .snow.layer2 { opacity: 0.8; background-size: 400px 400px; animation-duration: 6s; }
+        .snow.layer3 { opacity: 1; background-size: 300px 300px; animation-duration: 4s; }
+
+        @keyframes snowfall {
+            from { background-position: 0 0; }
+            to { background-position: 0 550px; }
+        }
+
+        /* --- CONTENEDOR LIBRO --- */
+        .book-container {
+            position: relative;
+            width: var(--card-width);
+            height: var(--card-height);
+            perspective: 2000px;
+            transition: transform 1s ease-in-out;
+            z-index: 10;
+        }
+
+        .book {
+            width: 100%; height: 100%; position: relative;
+            transform-style: preserve-3d;
+        }
+
+        .paper {
+            position: absolute; width: 100%; height: 100%;
+            top: 0; left: 0;
+            transform-origin: left;
+            transition: transform 1.2s cubic-bezier(0.645, 0.045, 0.355, 1);
+            transform-style: preserve-3d;
+            border-radius: 5px;
+            cursor: pointer;
+            box-shadow: 2px 2px 10px rgba(0,0,0,0.2);
+        }
+
+        .front, .back {
+            position: absolute; width: 100%; height: 100%;
+            top: 0; left: 0;
+            backface-visibility: hidden;
+            display: flex; flex-direction: column;
+            justify-content: center; align-items: center;
+            text-align: center;
+            padding: 25px;
+            background-color: var(--paper-color);
+            border: 1px solid #ddd;
+            overflow: hidden; /* Importante para el marco */
+        }
+
+        .front { z-index: 2; }
+        .back {
+            transform: rotateY(180deg);
+            z-index: 1;
+        }
+
+        /* --- NUEVO: MARCO NAVIDEÑO (Estilo CSS puro) --- */
+        .inner-frame {
+            position: absolute;
+            top: 12px; left: 12px; right: 12px; bottom: 12px;
+            border: 2px solid var(--red-festive);
+            outline: 2px solid var(--gold);
+            outline-offset: -6px;
+            pointer-events: none; /* Permite clicks a través del marco */
+            z-index: 5;
+        }
+
+        /* Decoraciones de esquinas (Acebo) */
+        .inner-frame::before, .inner-frame::after {
+            position: absolute;
+            font-size: 20px;
+            content: "🌿"; /* Emoji de hoja */
+            color: #27ae60;
+            background: var(--paper-color); /* Tapar la linea para que se vea limpio */
+            padding: 0 5px;
+            line-height: 1;
+        }
+
+        /* Esquina Superior Izquierda y Derecha */
+        .inner-frame::before {
+            top: -12px; left: -8px;
+            transform: rotate(-45deg);
+            box-shadow: 265px 0 0 0 var(--paper-color); /* Truco para duplicar al otro lado */
+            text-shadow: 265px 0 0 #27ae60; /* Duplicar el emoji */
+        }
+
+        /* Esquina Inferior Derecha e Izquierda */
+        .inner-frame::after {
+            bottom: -12px; right: -8px;
+            transform: rotate(135deg);
+            box-shadow: 265px 0 0 0 var(--paper-color);
+            text-shadow: 265px 0 0 #27ae60;
+        }
+        
+        /* Bayas Rojas (Puntos CSS) */
+        .berry-deco {
+            position: absolute; width: 100%; height: 100%; top:0; left:0; pointer-events: none; z-index: 6;
+        }
+        .berry-deco::before, .berry-deco::after {
+            content: "●"; color: var(--red-festive); font-size: 12px; position: absolute;
+        }
+        .berry-deco::before { top: 8px; left: 8px; text-shadow: 335px 0 0 var(--red-festive); } /* Arriba */
+        .berry-deco::after { bottom: 8px; right: 8px; text-shadow: -335px 0 0 var(--red-festive); } /* Abajo */
+
+
+        /* --- ESTILOS DE TEXTO --- */
+        h1.main-title {
+            font-family: 'Great Vibes', cursive;
+            font-size: 4.5rem; color: #fff; margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            z-index: 10;
+        }
+        h2.cursive-title {
+            font-family: 'Great Vibes', cursive;
+            font-size: 2.8rem;
+            color: var(--red-festive);
+            margin: 15px 0;
+            z-index: 10;
+        }
+        p.body-text {
+            font-size: 1.05rem;
+            line-height: 1.6; color: #444;
+            font-style: italic; margin-bottom: 15px;
+            font-weight: 300;
+            z-index: 10;
+            padding: 0 10px; /* Margen extra para no tocar el borde */
+        }
+
+        /* --- PORTADA Y CONTRAPORTADA (ROJAS) --- */
+        #p1 .front, #p3 .back {
+            background-color: var(--red-cover);
+            border: 4px solid #eebb44;
+            outline: 2px dashed rgba(255,255,255,0.3);
+            outline-offset: -12px;
+            color: white;
+        }
+        
+        #p3 .back h2.cursive-title { color: #fff; } 
+        #p3 .back p.body-text { color: #f0f0f0; }
+
+        /* --- FOTOS --- */
+        .polaroid-container {
+            background: white; padding: 10px 10px 35px 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+            width: 85%; transition: transform 0.3s;
+            z-index: 10;
+        }
+        .polaroid-img {
+            width: 100%; height: 250px; object-fit: cover; display: block;
+        }
+        .rot-left { transform: rotate(-3deg); }
+        .rot-right { transform: rotate(3deg); }
+
+        /* DECORACIONES FLOTANTES */
+        .decoration { font-size: 1.8rem; position: absolute; opacity: 0.8; z-index: 10; }
+        .top-left { top: 25px; left: 25px; transform: rotate(-45deg); }
+        .top-right { top: 25px; right: 25px; transform: rotate(45deg); }
+        .bottom-right { bottom: 25px; right: 25px; transform: rotate(135deg); }
+
+        /* BOTÓN */
+        .reset-btn {
+            position: absolute; bottom: 30px;
+            padding: 10px 25px; background: white;
+            color: var(--red-cover); border: none;
+            border-radius: 20px; font-weight: bold; cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            display: none; z-index: 100;
+            font-family: 'Merriweather', serif;
+        }
+
+        /* CLASES UTILITARIAS */
+        .flipped { transform: rotateY(-180deg); }
+        #p1 { z-index: 3; }
+        #p2 { z-index: 2; }
+        #p3 { z-index: 1; }
+        .flipped#p1 { z-index: 1; }
+        .flipped#p2 { z-index: 2; }
+        .flipped#p3 { z-index: 3; }
+
+        @media (max-width: 800px) {
+            :root { --card-width: 320px; --card-height: 500px; }
+            h1.main-title { font-size: 3.5rem; }
+            .polaroid-img { height: 210px; }
+            p.body-text { font-size: 0.95rem; }
+            
+            /* Ajuste del marco en movil */
+            .inner-frame::before { text-shadow: 205px 0 0 #27ae60; box-shadow: 205px 0 0 0 var(--paper-color); }
+            .inner-frame::after { text-shadow: 205px 0 0 #27ae60; box-shadow: 205px 0 0 0 var(--paper-color); }
+            .berry-deco::before { text-shadow: 275px 0 0 var(--red-festive); }
+            .berry-deco::after { text-shadow: -275px 0 0 var(--red-festive); }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="snow-container">
+        <div class="snow layer1"></div>
+        <div class="snow layer2"></div>
+        <div class="snow layer3"></div>
+    </div>
+
+    <div class="book-container" id="container">
+        <div class="book">
+            
+            <div class="paper" id="p1">
+                <div class="front">
+                    <div style="font-size: 5rem;">🎄</div>
+                    <h1 class="main-title">Feliz<br>Navidad</h1>
+                    <p style="color: #ffeaa7; letter-spacing: 1px; margin-top:10px;">PARA TI, MI AMOR ❤️</p>
+                    <p style="color: rgba(255,255,255,0.6); font-size: 0.8rem; margin-top: 50px;">(Toca para abrir)</p>
+                </div>
+                
+                <div class="back">
+                    <div class="inner-frame"></div>
+                    <div class="berry-deco"></div>
+
+                    <div class="decoration top-left">✨</div>
+                    <h2 class="cursive-title">Mi Magia...</h2>
+                    
+                    <p class="body-text">
+                        "Dicen que la Navidad es mágica, pero la verdadera magia la encontré en el momento en que entraste a mi vida. Antes, estas fechas eran solo luces y regalos; ahora, significan la oportunidad de agradecer al universo por ponerte en mi camino."
+                    </p>
+                    <p class="body-text" style="font-weight: bold; color: var(--red-festive);">
+                        "Eres mi paz en medio del caos."
+                    </p>
+                    
+                    <div style="font-size: 2.5rem; margin-top:15px; color:#bdc3c7;">❄️</div>
+                </div>
+            </div>
+
+            <div class="paper" id="p2">
+                <div class="front">
+                    <div class="inner-frame"></div>
+                    <div class="berry-deco"></div>
+
+                    <div class="decoration top-right">✨</div>
+                    <div class="polaroid-container rot-right">
+                        <img src="FT2.JPG" class="polaroid-img" alt="Foto">
+                    </div>
+                    <h2 class="cursive-title">Momentos</h2>
+                </div>
+
+                <div class="back">
+                    <div class="inner-frame"></div>
+                    <div class="berry-deco"></div>
+
+                    <div class="decoration bottom-right">🧸</div>
+                    <h2 class="cursive-title">Eternidad</h2>
+                    
+                    <p class="body-text">
+                        "Si pudiera envolver mi corazón y dártelo, lo haría mil veces. Eres la historia más bonita que el destino escribió para mí."
+                    </p>
+                    <p class="body-text">
+                        "Que esta Navidad sea solo el comienzo de infinitos recuerdos que construiremos juntos. Te amo más de lo que las palabras pueden expresar."
+                    </p>
+                </div>
+            </div>
+
+            <div class="paper" id="p3">
+                <div class="front">
+                    <div class="inner-frame"></div>
+                    <div class="berry-deco"></div>
+
+                    <div class="decoration top-left">🎄</div>
+                    <div class="polaroid-container rot-left">
+                        <img src="FOTO1.jpg" class="polaroid-img" alt="Foto">
+                    </div>
+                    <h2 class="cursive-title">Juntos</h2>
+                </div>
+
+                <div class="back">
+                    <div style="font-size: 4rem; margin-bottom: 10px;">❤️</div>
+                    <h2 class="cursive-title">¡Te Amo!</h2>
+                    <p class="body-text">
+                        "Gracias por ser mi mejor regalo."
+                    </p>
+                    <p style="color: #ffeaa7; font-size: 0.9rem; margin-top: 40px; border-top: 1px solid rgba(255,255,255,0.3); padding-top: 10px;">
+                        Siempre tuyo.
+                    </p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <button class="reset-btn" id="resetBtn">Cerrar Libro</button>
+
+    <script>
+        const container = document.querySelector('#container');
+        const resetBtn = document.querySelector('#resetBtn');
+        const p1 = document.querySelector('#p1');
+        const p2 = document.querySelector('#p2');
+        const p3 = document.querySelector('#p3');
+
+        p1.addEventListener('click', () => {
+            p1.classList.add('flipped');
+            container.style.transform = "translateX(50%)"; 
+            p1.style.zIndex = 1;
+        });
+
+        p2.addEventListener('click', () => {
+            p2.classList.add('flipped');
+            p2.style.zIndex = 2;
+        });
+
+        p3.addEventListener('click', () => {
+            p3.classList.add('flipped');
+            p3.style.zIndex = 3;
+            setTimeout(() => resetBtn.style.display = 'block', 500);
+        });
+
+        resetBtn.addEventListener('click', () => {
+            container.style.transform = "translateX(0%)";
+            p3.classList.remove('flipped');
+            p2.classList.remove('flipped');
+            p1.classList.remove('flipped');
+            
+            setTimeout(() => {
+                p1.style.zIndex = 3;
+                p2.style.zIndex = 2;
+                p3.style.zIndex = 1;
+            }, 500);
+            
+            resetBtn.style.display = 'none';
+        });
+    </script>
+</body>
+</html>
